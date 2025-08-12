@@ -1,0 +1,1893 @@
+<h1 id="lab-guide"><strong>Lab Guide</strong> <!-- omit in toc --></h1>
+<h2 id="inhaltsverzeichnis"><strong>Inhaltsverzeichnis</strong>
+<!-- omit in toc --></h2>
+<ul>
+<li><a href="#lab-1-first-login"><strong>Lab 1: First
+Login</strong></a></li>
+<li><a href="#lab-2-inventory"><strong>Lab 2:
+Inventory</strong></a></li>
+<li><a href="#lab-3-ansiblecfg"><strong>Lab 3:
+Ansible.cfg</strong></a></li>
+<li><a href="#lab-4-ad-hoc"><strong>Lab 4: Ad-Hoc</strong></a></li>
+<li><a href="#lab-5-erweiterte-ad-hoc-befehle"><strong>Lab 5: Erweiterte
+Ad-Hoc Befehle</strong></a></li>
+<li><a href="#lab-6-webserver-mit-playbook-installieren"><strong>Lab 6:
+Webserver mit Playbook installieren</strong></a></li>
+<li><a href="#lab-07-user-modul"><strong>Lab 07: User
+Modul</strong></a></li>
+<li><a href="#lab-08-copy"><strong>Lab 08: Copy</strong></a></li>
+<li><a href="#lab-09-copy-retry"><strong>Lab 09: Copy
+retry</strong></a></li>
+<li><a href="#lab-10-shell-und-command"><strong>Lab 10: Shell und
+Command</strong></a></li>
+<li><a href="#lab-11-lineinfile--service"><strong>Lab 11: Lineinfile +
+Service</strong></a></li>
+<li><a href="#lab-12-variablen-definieren-und-ausgeben"><strong>Lab 12:
+Variablen definieren und ausgeben</strong></a></li>
+<li><a href="#lab-13-facts-in-lineinfile"><strong>Lab 13: Facts in
+Lineinfile</strong></a></li>
+<li><a href="#lab-14-host-und-group-vars"><strong>Lab 14: Host und Group
+Vars</strong></a></li>
+<li><a href="#lab-15-extra-vars"><strong>Lab 15: Extra
+Vars</strong></a></li>
+<li><a href="#lab-16-lookups"><strong>Lab 16: Lookups</strong></a></li>
+<li><a href="#lab-17-jinja-filter"><strong>Lab 17:
+Jinja-Filter</strong></a></li>
+<li><a href="#lab-18-registering-uri-output"><strong>Lab 18: Registering
+Uri Output</strong></a></li>
+<li><a href="#lab-19-using-jinja-templates"><strong>Lab 19: Using Jinja
+Templates</strong></a></li>
+<li><a href="#lab-20-when"><strong>Lab 20: When</strong></a></li>
+<li><a href="#lab-21-user-mit-loop-erstellen"><strong>Lab 21: User mit
+loop erstellen</strong></a></li>
+<li><a href="#lab-22-handler-verwenden"><strong>Lab 22: Handler
+verwenden</strong></a></li>
+<li><a href="#lab-23-blocks-verwenden"><strong>Lab 23: Blocks
+verwenden</strong></a></li>
+<li><a href="#lab-24-playbook-aufteilen"><strong>Lab 24: Playbook
+aufteilen</strong></a></li>
+<li><a href="#lab-25-rollen-erstellen"><strong>Lab 25: Rollen
+erstellen</strong></a></li>
+<li><a href="#lab-26-rollen-verbinden"><strong>Lab 26: Rollen
+verbinden</strong></a></li>
+<li><a href="#lab-27-collection-installieren"><strong>Lab 27: Collection
+installieren</strong></a></li>
+<li><a href="#lab-28-using-tags"><strong>Lab 28: Using
+Tags</strong></a></li>
+<li><a href="#lab-29-vault"><strong>Lab 29: Vault</strong></a></li>
+</ul>
+<h2 id="lab-1-first-login"><strong>Lab 1: First Login</strong></h2>
+<ul>
+<li>Anmelden auf dem <code>Ansible-Node</code> (Workstation) mit den
+übermittelten Zugangsdaten</li>
+<li>Zur Übung ist ein <code>Cloud-Labor</code> vorgesehen.</li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 22%" />
+<col style="width: 19%" />
+<col style="width: 22%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Hostname</th>
+<th style="text-align: left;">Private IP</th>
+<th style="text-align: left;">Öffentliche IP</th>
+<th style="text-align: left;">Rolle</th>
+<th style="text-align: left;">VS Code Server</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ansible</code></td>
+<td style="text-align: left;">192.168.0.10</td>
+<td style="text-align: left;"><em>siehe E-Mail</em></td>
+<td style="text-align: left;">Ansible-Host</td>
+<td style="text-align: left;"><em>siehe E-mail</em></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>node1</code></td>
+<td style="text-align: left;">192.168.0.20</td>
+<td style="text-align: left;">keine</td>
+<td style="text-align: left;">Managed Host 1</td>
+<td style="text-align: left;">keine</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>node2</code></td>
+<td style="text-align: left;">192.168.0.30</td>
+<td style="text-align: left;">keine</td>
+<td style="text-align: left;">Managed Host 2</td>
+<td style="text-align: left;">keine</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Login per <code>SSH</code> <strong>oder</strong> Nutzung von VSCode
+per <code>Webbrowser</code>.</li>
+<li>Webbrowser:
+<ul>
+<li><code>URL</code> vom <code>VS Code Server</code> kopieren und in
+einem beliebigen Browser einfügen</li>
+<li>Benutzername: <code>user</code>, Passwort: <em>siehe
+E-Mail</em></li>
+</ul></li>
+<li>SSH:
+<ul>
+<li>Öffentliche IP vom Ansible Node kopieren und im SSH-Client der Wahl
+(Putty, MobileXTerm etc.) einfügen</li>
+<li>Benutzername: <code>user</code>, Passwort: <em>siehe
+E-Mail</em></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="lab-2-inventory"><strong>Lab 2: Inventory</strong></h2>
+<ul>
+<li><p>Erstellen eines Projektverzeichnisses
+<code>workspace</code></p></li>
+<li><p>Klickt dazu auf das <code>Explorer Icon</code> und anschließend
+auf <code>Open Folder</code></p></li>
+<li><p>Wählt im nächsten Schritt den <code>Home/Pfad</code> vom
+<code>User</code> aus. Dieser Wert ist standartmäßig gesetzt und kann
+mit Klick auf <code>Ok</code> übernommen werden.</p></li>
+<li><p>Als nächstes erstellt mit dem <code>Ordner Icon</code> einen
+neuen Ordner und benennt es nach <code>workspace</code></p></li>
+<li><p>Alternative kann auch per Rechtsklick und <code>New Folder</code>
+ein neuer Ordner erstellt werden.</p></li>
+<li><p>Erstellen der Datei <code>inventory.ini</code></p></li>
+<li><p>Per Rechtsklick und new File können wir eine neue Datei
+erstellen. Bennet dieses nach <code>inventory.ini</code></p></li>
+<li><p>Eintragen von <code>node1</code> und <code>node2</code></p>
+<ul>
+<li><p>je <strong>eine</strong> Node in die <strong>Gruppen</strong>
+<code>test</code> und <code>production</code></p></li>
+<li><p>Variable <code>ansible_host</code> soll die interne/private IP
+sein,</p></li>
+<li><p>Variable <code>ansible_user</code> der Nutzername
+<code>user</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[test]</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">node1 ansible_host</span><span class="ot">=</span><span class="st">192.168.0.20 </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[production]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">node2 ansible_host</span><span class="ot">=</span><span class="st">192.168.0.30 </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">[all:vars]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dt">ansible_user</span><span class="ot">=</span><span class="st">user</span></span></code></pre></div></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="lab-3-ansible.cfg"><strong>Lab 3: Ansible.cfg</strong></h2>
+<ul>
+<li>Erstelle eine Datei namens <code>ansible.cfg</code>.</li>
+</ul>
+<blockquote>
+<p><strong>Anmerkung</strong></p>
+<p>Das Erstellen der <code>ansible.cfg</code>-Datei funktioniert wie das
+Erstellen einer <em>Inventory</em>-Datei in <a
+href="#lab-2-inventory">Lab 2</a>.</p>
+</blockquote>
+<ul>
+<li><p>Eintragen der <code>inventory.ini</code> als
+<code>inventory</code> unter <code>[defaults]</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[defaults]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">inventory</span><span class="ot">=</span><span class="st">inventory.ini</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>In das Projektverzeichnisses <code>workspace</code>
+wechseln</p></li>
+<li><p>Überprüfen mit <code>ansible-config dump</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible-config dump </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ACTION_WARNINGS</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> True</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">AGNOSTIC_BECOME_PROMPT</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> True</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_CONNECTION_PATH</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> None</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_COW_PATH</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> None</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_COW_SELECTION</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> default</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_FORCE_COLOR</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_HOME</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> /home/user/.ansible</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_NOCOLOR</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_NOCOWS</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ex">ANSIBLE_PIPELINING</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ex">ANY_ERRORS_FATAL</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">BECOME_ALLOW_SAME_USER</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> False</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ex">BECOME_PASSWORD_FILE</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> None</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ex">BECOME_PLUGIN_PATH</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> [<span class="st">&#39;/home/user/.ansible/plugins/become&#39;</span>, <span class="st">&#39;/usr/share/ansible/plugins/become&#39;</span>]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="ex">CACHE_PLUGIN</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> memory</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="ex">CACHE_PLUGIN_CONNECTION</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> None</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="ex">CACHE_PLUGIN_PREFIX</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> ansible_facts</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ex">CACHE_PLUGIN_TIMEOUT</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> 86400</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="ex">CALLBACKS_ENABLED</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> []</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="ex">COLLECTIONS_ON_ANSIBLE_VERSION_MISMATCH</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> warning</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ex">COLLECTIONS_PATHS</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> [<span class="st">&#39;/home/user/.ansible/collections&#39;</span>, <span class="st">&#39;/usr/share/ansible/collections&#39;</span>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ex">COLLECTIONS_SCAN_SYS_PATH</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> True</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ex">COLOR_CHANGED</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> yellow</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="ex">COLOR_CONSOLE_PROMPT</span><span class="er">(</span><span class="ex">default</span><span class="kw">)</span> <span class="ex">=</span> white</span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Führe den Befehl <code>ansible-inventory --list</code> aus, um
+eine Liste der konfigurierten Inventory aufzulisten und zu Testen</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible-inventory <span class="at">--list</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;_meta&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;hostvars&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;ansible&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_host&quot;</span><span class="ex">:</span> <span class="st">&quot;192.168.0.10&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="ex">},</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;node1&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_host&quot;</span><span class="ex">:</span> <span class="st">&quot;192.168.0.20&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_ssh_pass&quot;</span><span class="ex">:</span> <span class="st">&quot;SVA2023%&quot;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_user&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>            <span class="ex">},</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;node2&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_host&quot;</span><span class="ex">:</span> <span class="st">&quot;192.168.0.30&quot;</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_ssh_pass&quot;</span><span class="ex">:</span> <span class="st">&quot;SVA2023%&quot;</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                <span class="st">&quot;ansible_user&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            <span class="kw">}</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="er">}</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;all&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;children&quot;</span><span class="ex">:</span> [</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;ungrouped&quot;</span><span class="ex">,</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;web&quot;</span><span class="ex">,</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;control&quot;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="ex">]</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;control&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;hosts&quot;</span><span class="ex">:</span> [</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;ansible&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="ex">]</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;web&quot;</span><span class="ex">:</span> {</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;hosts&quot;</span><span class="ex">:</span> [</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;node1&quot;</span><span class="ex">,</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;node2&quot;</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="ex">]</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-4-ad-hoc"><strong>Lab 4: Ad-Hoc</strong></h2>
+<ul>
+<li><p>Setze einen Ad-Hoc <em>Ping</em> Befehl zu <em>node1</em> ab</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> node1 <span class="at">-m</span> ping</span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Setze erneut einen Ad-Hoc <em>Ping</em> Befehl zu <em>node1</em>
+ab, verwende diesmal den <code>--ask-pass</code> Parameter. Ansible wird
+dann nach dem SSH-Passwort für den Nutzer fragen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible node1 <span class="at">-m</span> ping <span class="at">--ask-pass</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">SSH</span> password:</span></code></pre></div></li>
+</ul>
+<p>Um nicht ständig das Passwort tippen zu müssen, richten wir
+schlüsselbasierte Authentifizierung ein.</p>
+<p>Gib dazu den Befehl <code>ssh-copy-id USER@HOST</code> ein, um den
+öffentlichen Schlüssel auf die Hosts zu kopieren.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> user@node1</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> user@node2</span></code></pre></div>
+<p>Danach sollte eine Verbindung zu beiden Knoten ohne
+<code>--ask-pass</code> und Passwortabfrage erfolgreich sein.</p>
+<ul>
+<li><p>Teste dies durch einen erneuten Ad-Hoc <em>Ping</em> Abfrage.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible node1 <span class="at">-m</span> ping</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">SUCCESS</span> =<span class="op">&gt;</span> {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> false,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ping&quot;</span><span class="ex">:</span> <span class="st">&quot;pong&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible node2 <span class="at">-m</span> ping</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">SUCCESS</span> =<span class="op">&gt;</span> {</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> false,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ping&quot;</span><span class="ex">:</span> <span class="st">&quot;pong&quot;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="ex">[user@ansible</span> ~]$ ansible all <span class="at">-m</span> ping </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">SUCCESS</span> =<span class="op">&gt;</span> {</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> false,</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ping&quot;</span><span class="ex">:</span> <span class="st">&quot;pong&quot;</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">SUCCESS</span> =<span class="op">&gt;</span> {</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> false,</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ping&quot;</span><span class="ex">:</span> <span class="st">&quot;pong&quot;</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-5-erweiterte-ad-hoc-befehle"><strong>Lab 5: Erweiterte
+Ad-Hoc Befehle</strong></h2>
+<ul>
+<li>Ad-Hoc Befehl mit dem <code>command</code>-Modul ausführen. Nutze
+dazu folgende bash-Kommandos/Argumente:
+<ul>
+<li><p><code>whoami</code> (gibt den Nutzernamen zurück)</p></li>
+<li><p><code>pwd</code> (gibt das aktuelle Verzeichnis zurück)</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<p>Für <code>whoami</code></p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> all <span class="at">-m</span> command <span class="at">-a</span> <span class="st">&#39;whoami&#39;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">user</span></span></code></pre></div>
+<p>Für <code>pwd</code>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> all <span class="at">-m</span> command <span class="at">-a</span> <span class="st">&#39;pwd&#39;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/user</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/user</span></span></code></pre></div></li>
+</ul></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Per <code>file</code>-Modul ein Verzeichnis namens
+<code>ansible</code> an einem <code>beliebigen Pfad</code> anlegen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> all <span class="at">-m</span> file <span class="at">-a</span> <span class="st">&#39;path=~/ansible state=directory&#39;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">CHANGED</span> =<span class="op">&gt;</span> {</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> true,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;gid&quot;</span><span class="ex">:</span> 1001,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;group&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;mode&quot;</span><span class="ex">:</span> <span class="st">&quot;0775&quot;</span>,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;owner&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;path&quot;</span><span class="ex">:</span> <span class="st">&quot;/home/user/ansible&quot;</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;secontext&quot;</span><span class="ex">:</span> <span class="st">&quot;unconfined_u:object_r:user_home_t:s0&quot;</span>,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;size&quot;</span><span class="ex">:</span> 6,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;state&quot;</span><span class="ex">:</span> <span class="st">&quot;directory&quot;</span>,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;uid&quot;</span><span class="ex">:</span> 1001</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">CHANGED</span> =<span class="op">&gt;</span> {</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> true,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;gid&quot;</span><span class="ex">:</span> 1001,</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;group&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;mode&quot;</span><span class="ex">:</span> <span class="st">&quot;0775&quot;</span>,</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;owner&quot;</span><span class="ex">:</span> <span class="st">&quot;user&quot;</span>,</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;path&quot;</span><span class="ex">:</span> <span class="st">&quot;/home/user/ansible&quot;</span>,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;secontext&quot;</span><span class="ex">:</span> <span class="st">&quot;unconfined_u:object_r:user_home_t:s0&quot;</span>,</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;size&quot;</span><span class="ex">:</span> 6,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;state&quot;</span><span class="ex">:</span> <span class="st">&quot;directory&quot;</span>,</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;uid&quot;</span><span class="ex">:</span> 1001</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li>Per <code>command</code>-Modul den Befehl <code>ls</code> ausführen.
+<ul>
+<li><p>Listet den Inhalt des aktuellen Verzeichnisses auf</p></li>
+<li><p>Das angelegte Verzeichnis sollte zu sehen sein.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> all <span class="at">-m</span> command <span class="at">-a</span> <span class="st">&#39;ls&#39;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">CHANGED</span> <span class="kw">|</span> <span class="va">rc</span><span class="op">=</span>0 <span class="op">&gt;&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span></span></code></pre></div></li>
+</ul></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Verzeichnis per <code>File</code> wieder löschen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> all <span class="at">-m</span> file <span class="at">-a</span> <span class="st">&#39;path=~/ansible state=absent&#39;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">node1</span> <span class="kw">|</span> <span class="ex">CHANGED</span> =<span class="op">&gt;</span> {</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> true,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;path&quot;</span><span class="ex">:</span> <span class="st">&quot;/home/user/ansible&quot;</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;state&quot;</span><span class="ex">:</span> <span class="st">&quot;absent&quot;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="ex">node2</span> <span class="kw">|</span> <span class="ex">CHANGED</span> =<span class="op">&gt;</span> {</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;ansible_facts&quot;</span><span class="ex">:</span> {</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;discovered_interpreter_python&quot;</span><span class="ex">:</span> <span class="st">&quot;/usr/libexec/platform-python&quot;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="er">}</span><span class="ex">,</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;changed&quot;</span><span class="ex">:</span> true,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;path&quot;</span><span class="ex">:</span> <span class="st">&quot;/home/user/ansible&quot;</span>,</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;state&quot;</span><span class="ex">:</span> <span class="st">&quot;absent&quot;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html">Doku</a></p>
+<hr />
+<h2 id="lab-6-webserver-mit-playbook-installieren"><strong>Lab 6:
+Webserver mit Playbook installieren</strong></h2>
+<ul>
+<li><p>Erstellen ein Playbook namens <code>apache.yml</code></p></li>
+<li><p>Installiere das Paket <em>httpd</em></p></li>
+<li><p>Verwende dafür das Modul <code>package</code></p></li>
+<li><p>Auf allen Hosts der Gruppe ‘test’</p></li>
+<li><p>Es soll die aktuelle Version verwendet werden</p></li>
+<li><p>Ausführen mit <code>ansible-playbook apache.yml</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install Webserver</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test  </span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install httpd</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state</span><span class="kw">:</span><span class="at"> latest</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">become</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Starte anschließend den Webserver, verwende dafür den folgenden
+Codeblock</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Start Webserver</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> started</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-07-user-modul"><strong>Lab 07: User Modul</strong></h2>
+<ul>
+<li>Erweitern des Playbooks <code>apache.yml</code></li>
+<li>Anlegen der User
+<ul>
+<li><strong>maxm</strong>: “Max Mustermann”</li>
+<li><strong>ericam</strong>: “Erica Musterfrau”</li>
+</ul></li>
+<li>Vergib ebenfalls eine <code>Benutzer-ID</code> (UID)
+<ul>
+<li>maxm: 1010</li>
+<li>ericam: 1011</li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add user maxm</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.user</span><span class="kw">:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> maxm</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Max Mustermann</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1010</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add user ericam</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.user</span><span class="kw">:</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ericam</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Erica Mustermann</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1011</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/user_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-08-copy"><strong>Lab 08: Copy</strong></h2>
+<ul>
+<li><p>Erstelle einen neuen Ordner namens <code>files</code> im
+aktuellen Workspace</p></li>
+<li><p>Erstelle die Datei <code>index.html</code> im
+<code>files</code>-Verzeichnis</p>
+<ul>
+<li>Fülle die Datei mit einem beliebigen Inhalt z.B. “Hello from
+Webserver”</li>
+</ul></li>
+<li><p>Erweitere das Playbook <code>apache.yml</code></p>
+<ul>
+<li>Kopiere die <code>index.html</code>-Datei nach
+<code>/var/www/html/index.html</code> auf allen Hosts der Gruppe
+<code>test</code></li>
+</ul>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy file to var/www/html</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> files/index.html</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> /var/www/html/index.html</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Überprüfen per SSH</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> node1</span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/copy_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-09-copy-retry"><strong>Lab 09: Copy retry</strong></h2>
+<ul>
+<li>Führe das Playbook <code>apache.yml</code> nochmals aus
+<ul>
+<li>Überprüfe den <code>changed-Status</code> vom copy-Modul</li>
+</ul></li>
+<li>Beim zweiten Durchlauf gilt <code>changed: false</code></li>
+</ul>
+<hr />
+<h2 id="lab-10-shell-und-command"><strong>Lab 10: Shell und
+Command</strong></h2>
+<ul>
+<li>Erweitern des Playbooks <code>apache.yml</code></li>
+<li>Erstelle zwei Unterverzeichnisse unter <code>/var/www/html</code>
+mittels <code>Shell</code> oder <code>Command</code> Modul
+<ul>
+<li>Eine für jeden <code>User</code></li>
+<li>Verwende dafür den Befehl <code>mkdir</code></li>
+<li>Ordner sollen nur angelegt werden, wenn diese noch nicht existieren
+(Idempotenz)</li>
+</ul></li>
+<li>User <strong>Max</strong> und <strong>Erica</strong> sollen jeweils
+auf <code>ihr eigenes</code> Verzeichnis zugreifen können
+<ul>
+<li>Verwende dafür den Befehl <code>chown</code></li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Max</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.shell</span><span class="kw">:</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> mkdir /var/www/html/dir_max</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> /var/www/html/dir_max</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Erica</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.shell</span><span class="kw">:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> mkdir /var/www/html/dir_erica</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> /var/www/html/dir_erica</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow access to maxm folder to user Max</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.shell</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R maxm /var/www/html/dir_max&#39;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow access to ericam folder to user Erica</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.shell</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R ericam /var/www/html/dir_erica&#39;</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/shell_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-11-lineinfile-service"><strong>Lab 11: Lineinfile +
+Service</strong></h2>
+<ul>
+<li><p>Erweitern des Playbooks <code>apache.yml</code></p></li>
+<li><p>Füge die neue Zeile: “Guten Tag” in
+<em>/var/www/html/index.html</em> hinzu</p></li>
+<li><p>Verwende die Validierung
+<code>'grep "Guten Tag" %s'</code></p></li>
+<li><p>Starte anschließend den Webserver neu</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add Guten Tag to index.html</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> /var/www/html/index.html</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;Guten Tag&#39;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">regexp</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;^%Guten&#39;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">validate</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;grep &quot;Guten Tag&quot; %s&#39;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart service httpd, in all cases</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/lineinfile_module.html">Doku
+Lineinfile</a></p>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/service_module.html">Doku
+Service</a></p>
+<hr />
+<h2 id="lab-12-variablen-definieren-und-ausgeben"><strong>Lab 12:
+Variablen definieren und ausgeben</strong></h2>
+<ul>
+<li>Erstelle ein neues Playbook namens <code>lab_vars.yml</code></li>
+<li>Definiere mehrere Beispiel-Variablen von verschiedenen Datentypen
+und gebe diesen Beispielwerte. Verwende die folgenden Datentypen:
+<ul>
+<li>string</li>
+<li>int, float</li>
+<li>list</li>
+<li>dictionary</li>
+</ul></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Gib diese Variablen anschließend mit dem <code>debug</code>-Modul
+aus</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Play with variables</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">vars</span><span class="kw">:</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">string_variable</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Ansible Fast-Track Schulung&quot;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">int_variable</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">float_variable</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.5</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">list_variable</span><span class="kw">:</span><span class="co">                 # Liste (Array)</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> Stanki</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> Niko</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dictionary_variable</span><span class="kw">:</span><span class="co">           # assoziative Liste/ list(dict)</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">skill</span><span class="kw">:</span><span class="at"> Linux</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">level</span><span class="kw">:</span><span class="at"> </span><span class="dv">9001</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">skill</span><span class="kw">:</span><span class="at"> Unix</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">level</span><span class="kw">:</span><span class="at"> </span><span class="dv">1970</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> print my variables</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">msg</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;String: {{ string_variable }} Int: {{ int_variable }} Float: {{ float_variable }} Liste: {{ list_variable }} Dictionary: {{ dictionary_variable }}&quot;</span><span class="at"> </span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/debug_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-13-facts-in-lineinfile"><strong>Lab 13: Facts in
+Lineinfile</strong></h2>
+<ul>
+<li><p>Liste die Facts vom <code>node1</code> auf</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible</span> node1 <span class="at">-m</span> setup</span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li>Find die Fakten für die folgenden Parameter heraus:
+<ul>
+<li>Hostname (FQDN)</li>
+<li>IP-Adresse</li>
+<li>OS</li>
+</ul></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Erweitere anschließend das Playbook
+<code>apache.yml</code></p></li>
+<li><p>Ändere das <code>lineinfile</code>-Modul, schreibe dazu anstatt
+“<em>Guten Tag</em>” die <code>ansible facts</code> <em>Hostname
+(FQDN)</em>, <em>IP Addresse</em> und <em>OS</em> in die
+<code>index.html</code>-Datei</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">become</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">gather_facts</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add host information to index.html</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ ansible_fqdn }} {{ ansible_default_ipv4.address }} {{ ansible_distribution }}&quot;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-14-host-und-group-vars"><strong>Lab 14: Host und Group
+Vars</strong></h2>
+<ul>
+<li><p>Erweitere das Lineinfile-Modul in <code>apache.yml</code> mit
+Variablen, welche aus Group und Host Vars gefüllt werden.</p></li>
+<li><p>Lege die Verzeichnisse <code>host_vars</code> und
+<code>group_vars</code> an.</p></li>
+<li><p>Erstelle passende <code>yaml</code>-Dateien für die
+entsprechenden Verzeichnisse</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<p>Die Struktur sollte anschließend so aussehen:</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> ansible.cfg</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> inventory.ini</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> apache.yml</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> lab_vars.yml</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> group_vars</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── all.yml</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> host_vars</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── node1.yml</span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Setze die Variable <code>web_content</code> und fülle diese mit
+dem passenden Inhalt.</p>
+<table>
+<thead>
+<tr>
+<th>Ziel</th>
+<th>Hosts</th>
+<th>Werte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gruppe</td>
+<td><code>all</code></td>
+<td><code>&lt;h1&gt;Test System&lt;/h1&gt;</code></td>
+</tr>
+<tr>
+<td>Host</td>
+<td><code>node1</code></td>
+<td><code>&lt;h1&gt;Danger Zone&lt;/h1&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<p><strong>group_vars</strong> → <strong>all.yaml</strong></p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">web_content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;&lt;h1&gt;Test System &lt;/h1&gt;&quot;</span></span></code></pre></div>
+<p><strong>host_vars</strong> → <strong>node1.yml</strong></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">web_content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;&lt;h1&gt;Danger Zone&lt;/h1&gt;&quot;</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Erweitere das <code>lineinfile</code>-Modul, sodass der Text der
+in der Variable <code>web_content</code> definiert wurde in
+<code>/var/www/html/index.html</code> eingesetzt wird.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add content of group variable &quot;web_content&quot; to index.html</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{{ web_content }}&#39;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-15-extra-vars"><strong>Lab 15: Extra Vars</strong></h2>
+<ul>
+<li>Lagere die Variablen-Deklaration im <code>lab_vars</code>- und
+<code>apache</code>-Playbook in eine <strong>eigene</strong> YAML-Datei
+neben dem Playbook aus
+<ul>
+<li>Erstelle ein Verzeichnis namens <code>vars</code></li>
+<li>Erstelle eine neue YAML-Datei und verlagere die Variablen aus dem
+Playbook dort hinein</li>
+<li>Es können auch neue Variablen definiert werden</li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">webserver_path</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/var/www/html&quot;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">string_variable</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Ansible Fast-Track Schulung&quot;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">int_variable</span><span class="kw">:</span><span class="at"> </span><span class="dv">16</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">float_variable</span><span class="kw">:</span><span class="at"> </span><span class="fl">1.5</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">list_variable</span><span class="kw">:</span><span class="co">                 # Liste (Array)</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> Stanki</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> Niko</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dictionary_variable</span><span class="kw">:</span><span class="co">           # assoziative Liste/ list(dict)</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">skill</span><span class="kw">:</span><span class="at"> Linux</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">level</span><span class="kw">:</span><span class="at"> </span><span class="dv">9001</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">skill</span><span class="kw">:</span><span class="at"> Unix</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">level</span><span class="kw">:</span><span class="at"> </span><span class="dv">1970</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a><span class="fu">my_key</span><span class="kw">:</span><span class="at"> SVA</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li>Erweitere das Playbook <code>lab_vars.yml</code> um einen
+<code>vars_prompt</code> block
+<ul>
+<li>Nimm eine Variable, die du in deiner ausgelagerten Variablendatei
+erstellt hast</li>
+<li>Überschreibe die Variable aus dem vars-Ordner mit
+<code>extra</code>-Vars, welche beim Aufruf übergeben wird</li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Play with variables</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">vars_files</span><span class="kw">:</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> my_vars.yml</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">vars_prompt</span><span class="kw">:</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> my_key</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">prompt</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;Enter access Key&quot;</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">private</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> print facts</span></span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">msg</span><span class="kw">:</span></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;{{ dictionary_variable[0] }}&quot;</span></span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> print my variables</span></span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">msg</span><span class="kw">:</span></span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;{{ int_variable }}&quot;</span></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;{{ string_variable }}&quot;</span></span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> </span><span class="st">&quot;{{ my_key }}&quot;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-16-lookups"><strong>Lab 16: Lookups</strong></h2>
+<ul>
+<li>Erweitere das <code>apache.yml</code> Playbook.</li>
+<li>Erstelle die Datei <code>files/page.html</code> auf dem Ansible
+Host.
+<ul>
+<li>Füge einen beliebigen Inhalt hinzu.</li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>Ansible KtK<span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Kopiere die Datei <code>page.html</code> mittels
+<code>copy</code>-Modul und dem <em>lookup</em>-Filter auf den
+Zielserver unter <code>/var/www/html/index.html</code>.</p></li>
+<li><p>Verwende für den <em>lookup</em>-Filter das
+<code>file</code>-Modul.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy new content</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ lookup(&#39;file&#39;, &#39;files/page.html&#39;) }}&quot;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/var/www/html/index.html&quot;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-17-jinja-filter"><strong>Lab 17: Jinja-Filter</strong></h2>
+<ul>
+<li><p>Suche nach verschiedenen Jinja Filtern</p></li>
+<li><p>Erweitern der lab_vars.yml um verschiedene Filter</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vars</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">mylist</span><span class="kw">:</span><span class="at"> </span><span class="kw">[</span><span class="dv">4</span><span class="kw">,</span><span class="dv">5</span><span class="kw">,</span><span class="dv">6</span><span class="kw">]</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">myvar</span><span class="kw">:</span><span class="at"> ipSUM</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Use mylist</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">msg</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ mylist | min }}&quot;</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Use myvar</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">msg</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ myvar | lower }}&quot;</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_filters.html">Docs</a></p>
+<hr />
+<h2 id="lab-18-registering-uri-output"><strong>Lab 18: Registering Uri
+Output</strong></h2>
+<ul>
+<li><p>Erstelle ein neues Playbook namens
+<code>cat_fact.yml</code></p></li>
+<li><p>Der Zielserver ist der <strong>node1</strong></p></li>
+<li><p>Verwenden das <code>uri</code>-Modul, um die Cat-Facts
+<strong>API</strong> auszulesen: </b></p>
+<p><code>https://catfact.ninja/fact</code></p></li>
+<li><p>Speichere die Ausgabe in ein <code>register</code></p></li>
+<li><p>Gib die <em>facts</em> mit einem <code>debug</code>-Modul
+aus</p></li>
+<li><p>Schreibe anschließend diese Facts in
+<code>/var/www/html/mypage.html</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb33"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Lab register uri output</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Check cat-facts api</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.uri</span><span class="kw">:</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">url</span><span class="kw">:</span><span class="at"> https://catfact.ninja/fact</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">return_content</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">register</span><span class="kw">:</span><span class="at"> cat_facts</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Print cat_facts</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.debug</span><span class="kw">:</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">msg</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ cat_facts.json.fact }}&quot;</span></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy register content </span></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ cat_facts.json.fact }}&quot;</span></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/var/www/html/mypage.html&quot;</span></span></code></pre></div></li>
+</ul>
+<p><a
+href="https://docs.ansible.com/ansible/latest/collections/ansible/builtin/uri_module.html">Doku</a></p>
+<hr />
+<h2 id="lab-19-using-jinja-templates"><strong>Lab 19: Using Jinja
+Templates</strong></h2>
+<ul>
+<li><p>Erstelle ein neues Playbook namens
+<code>motd.yml</code>.</p></li>
+<li><p>Zielserver ist der <em>test</em>.</p></li>
+<li><p>Lege die Datei <code>motd.j2</code> im <code>templates</code>
+Verzeichnis an.</p></li>
+<li><p>Verwende das <code>template</code>-Modul um das
+<code>motd.j2</code>-Template auf den Zielserver zu kopieren.</p>
+<p>Das <code>motd.j2</code>-Template könnte bspw. so aussehen:</p>
+<pre class="jinja"><code>Welcome to {{ inventory_hostname }}
+
+Running: {{ ansible_distribution }}
+
+Reachable via:
+{% for ip in ansible_all_ipv4_addresses %}
+- {{ ip }}
+{% endfor %}</code></pre></li>
+<li><p>Die Datei <code>/etc/motd</code> auf dem Zielserver, soll durch
+das Jinja2-Template geändert werden.</p></li>
+<li><p><em>Owner</em> und <em>Gruppe</em> soll auf <code>root</code>
+gesetzt werden.</p></li>
+<li><p>Die Rechte sollten <code>0644</code> sein.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb35"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set /etc/motd from template</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.template</span><span class="kw">:</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;templates/motd.j2&quot;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/etc/motd&quot;</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">owner</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">group</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;0644&quot;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-20-when"><strong>Lab 20: When</strong></h2>
+<ul>
+<li><p>Erweitere das Playbook <code>apache.yml</code></p></li>
+<li><p>Füge eine Bedingung hinzu, sodass das Paket <code>httpd</code>
+nur auf dem System der <strong>RedHat Familie</strong> installiert
+wird</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb36"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install httpd</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">when</span><span class="kw">:</span><span class="at"> ansible_os_family == &quot;RedHat&quot;</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-21-user-mit-loop-erstellen"><strong>Lab 21: User mit loop
+erstellen</strong></h2>
+<ul>
+<li><p>Umschreiben des Playbooks <code>apache.yml</code>.</p></li>
+<li><p>Lege die User, die vorher in <a href="#lab-07-user-modul">Lab
+07</a> angelegt wurden mit einer Schleife an.</p></li>
+<li><p>Vergib ein Passwort</p>
+<ul>
+<li>Übergib das Password mit einem <code>hash</code></li>
+</ul>
+<p></b></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb37"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add user {{ item.name }}</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.user</span><span class="kw">:</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.name }}&quot;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.comment }}&quot;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.uid }}&quot;</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.password | password_hash(&#39;sha512&#39;) }}&quot;</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">loop</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{{ users }}&#39;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">vars</span><span class="kw">:</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">users</span><span class="kw">:</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> maxm</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Max Mustermann</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1010</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ericam</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Erica Musterfrau</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1011</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-22-handler-verwenden"><strong>Lab 22: Handler
+verwenden</strong></h2>
+<ul>
+<li><p>Erweitere das Playbook <code>apache.yml</code></p></li>
+<li><p><strong>Ziel</strong>: Anpassen der Serversignatur</p></li>
+<li><p>Installiere das Paket <code>mod_security</code></p></li>
+<li><p>Erstelle ein Template namens
+<code>templates/serversignature.conf.j2</code> mit dem folgendem
+Inhalt:</p>
+<div class="sourceCode" id="cb38"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">IfModule</span><span class="ot"> security2_module</span><span class="er">&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="er">SecRuleEngine</span> <span class="er">on</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="er">ServerTokens</span> <span class="er">Full</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="er">SecServerSignature</span> <span class="er">&quot;Pinkepank</span> <span class="er">Server</span> <span class="er">({{</span> <span class="er">ansible_hostname</span> <span class="er">}})&quot;</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;/IfModule&gt;</span></span></code></pre></div></li>
+<li><p>Ersetze die Datei
+<code>/etc/httpd/conf.d/serversignature.conf</code> durch das
+<em>Jinja</em>-Template.</p></li>
+<li><p>Der <em>Besitzer</em> und die <em>Gruppe</em> sollten
+<code>root</code> sein.</p></li>
+<li><p>Rechte sollte auf <code>0644</code> gesetzt werden.</p></li>
+<li><p>Starte den <em>httpd</em> bei <strong>Änderungen
+neu</strong>.</p></li>
+<li><p>Teste die Signatur mit dem Befehl: <code>curl -I node1</code></p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb39"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install apache</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> httpd</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> mod_security</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Set server signature</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ansible.builtin.template</span><span class="kw">:</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">src</span><span class="kw">:</span><span class="at"> templates/serversignature.conf.j2</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> /etc/httpd/conf.d/serversignature.conf</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">owner</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">group</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;0644&quot;</span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">notify</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a><span class="fu">handlers</span><span class="kw">:</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a><span class="at"> </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="at">   </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a><span class="at">     </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a><span class="at">     </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted</span></span></code></pre></div>
+<hr /></li>
+</ul>
+<h2 id="lab-23-blocks-verwenden"><strong>Lab 23: Blocks
+verwenden</strong></h2>
+<ul>
+<li><p>Erweitere das <code>apache.yml</code> um einen
+<code>Block</code>-Bereich</p></li>
+<li><p>Füge bspw. die Bedingung
+<code>when: ansible_os_family == RedHat</code> dem <em>Block</em>
+hinzu</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Apache block</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">block</span><span class="kw">:</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install apache</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> httpd</span></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="kw">-</span><span class="at"> mod_security</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present</span></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="at">    ...</span></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">when</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> ansible_os_family == &quot;RedHat&quot;   </span></span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a><span class="fu">handlers</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted</span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-24-playbook-aufteilen"><strong>Lab 24: Playbook
+aufteilen</strong></h2>
+<ul>
+<li><p>Teile das <code>apache.yml</code> in zwei logische Playbooks auf.
+Beispielsweise in <code>webserver.yml</code> und <code>user.yml</code>
+aufteilen.</p></li>
+<li><p><strong>Webserver</strong> Playbook, sollte die Webserver Logik
+enthalten</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb41"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install apache</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> httpd</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> mod_security</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present            </span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy file to /var/www/html</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> files/index.html</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add Facts to index.html</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{{ web_content }}&#39;</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy page file </span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ lookup(&#39;file&#39;, &#39;files/page.html&#39;) }}&quot;</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span><span class="at"> </span></span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Template config serversignature</span></span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.template</span><span class="kw">:</span></span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> templates/serversignature.conf.j2</span></span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> /etc/httpd/conf.d/serversignature.conf</span></span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">owner</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb41-29"><a href="#cb41-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">group</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb41-30"><a href="#cb41-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;0644&#39;</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p><strong>User Playbook</strong>, sollte die User Logik
+enthalten</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<p></b></p>
+<div class="sourceCode" id="cb42"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create/Add Users</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.user</span><span class="kw">:</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.name }}&quot;</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.comment }}&quot;</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.uid }}&quot;</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.password | password_hash(&#39;sha512&#39;) }}&quot;</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">update_password</span><span class="kw">:</span><span class="at"> on_create </span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">loop</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ users }}&quot;</span><span class="at"> </span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">vars</span><span class="kw">:</span><span class="at">  </span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">users</span><span class="kw">:</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> maxm</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Max Mustermann</span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1010</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ericam</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Erica Musterfrau</span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1011</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure          </span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Max</span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;mkdir /var/www/html/dir_max&#39;</span></span>
+<span id="cb42-23"><a href="#cb42-23" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/dir_max&#39;</span></span>
+<span id="cb42-24"><a href="#cb42-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-25"><a href="#cb42-25" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Erica</span></span>
+<span id="cb42-26"><a href="#cb42-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb42-27"><a href="#cb42-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;mkdir /var/www/html/dir_erica&#39;</span></span>
+<span id="cb42-28"><a href="#cb42-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/dir_erica&#39;</span></span>
+<span id="cb42-29"><a href="#cb42-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-30"><a href="#cb42-30" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow acces to dir_max </span></span>
+<span id="cb42-31"><a href="#cb42-31" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb42-32"><a href="#cb42-32" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R maxm:maxm /var/www/html/dir_max&#39;</span></span>
+<span id="cb42-33"><a href="#cb42-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-34"><a href="#cb42-34" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow acces to dir_erica </span></span>
+<span id="cb42-35"><a href="#cb42-35" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb42-36"><a href="#cb42-36" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R ericam:ericam /var/www/html/dir_erica&#39;</span></span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Binde beide Playbooks anschließend in <code>apache.yml</code>
+ein.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb43"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Apache Role</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">become</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">gather_facts</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install httpd and mod_security</span></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">block</span><span class="kw">:</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Include apache playbook</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">ansible.builtin.include_tasks</span><span class="kw">:</span><span class="at"> webserver.yml</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Include users playbook</span></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">ansible.builtin.include_tasks</span><span class="kw">:</span><span class="at"> users.yml</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">notify</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">when</span><span class="kw">:</span><span class="at"> ansible_os_family == &quot;RedHat&quot;</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">handlers</span><span class="kw">:</span></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb43-20"><a href="#cb43-20" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted   </span></span></code></pre></div></li>
+</ul>
+<hr />
+<h2 id="lab-25-rollen-erstellen"><strong>Lab 25: Rollen
+erstellen</strong></h2>
+<ul>
+<li><p>Erstelle ein Verzeichnis namens <code>roles</code>.</p></li>
+<li><p>Erstelle jeweils eine Rolle für das Playbook
+<code>webserver.yml</code> und <code>user.yml</code> im
+<code>roles</code> Verzeichnis.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<div class="sourceCode" id="cb44"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> roles</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible-galaxy</span> role init webserver <span class="at">--init-path</span> roles</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible-galaxy</span> role init user <span class="at">--init-path</span> roles</span></code></pre></div></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Verschiebe die Variablendeklarationen, Templates und die Tasks an
+die passenden Stellen in den jeweiligen Rollen.</p>
+<details>
+<summary>
+<p>Lösungen</p>
+</summary>
+<blockquote>
+<details>
+<summary>
+<p>Webserver</p>
+</summary>
+<blockquote>
+<details>
+<summary>
+<p>Struktur</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb45"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> README.md</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> defaults</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> files</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── index.html</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── page.html</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> handlers</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> meta</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tasks</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── main.yml</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── webserver.yml</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> templates</span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── motd.j2</span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── serversignature.conf.j2</span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tests</span>
+<span id="cb45-20"><a href="#cb45-20" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── inventory</span>
+<span id="cb45-21"><a href="#cb45-21" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── test.yml</span>
+<span id="cb45-22"><a href="#cb45-22" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> vars</span>
+<span id="cb45-23"><a href="#cb45-23" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> main.yml</span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>task/webserver.yml</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb46"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install apache</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> httpd</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> mod_security</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present            </span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy file to /var/www/html</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> files/index.html</span></span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add Facts to index.html</span></span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{{ web_content }}&#39;</span></span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy page file </span></span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ lookup(&#39;file&#39;, &#39;files/page.html&#39;) }}&quot;</span></span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span><span class="at"> </span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Template config serversignature</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.template</span><span class="kw">:</span></span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> templates/serversignature.conf.j2</span></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> /etc/httpd/conf.d/serversignature.conf</span></span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">owner</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb46-29"><a href="#cb46-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">group</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb46-30"><a href="#cb46-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;0644&#39;</span></span>
+<span id="cb46-31"><a href="#cb46-31" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">notify</span><span class="kw">:</span><span class="at"> Restart httpd</span></span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>task/main.yml</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb47"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tasks file for webserver</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Include apache logik</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.include_tasks</span><span class="kw">:</span><span class="at"> webserver.yml </span></span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>handlers</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb48"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co"># handlers file for webserver</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted</span></span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>vars</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb49"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co"># vars file for webserver</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">webserver_path</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;/var/www/html/index.html&quot;</span></span></code></pre></div>
+</blockquote>
+</details>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>User</p>
+</summary>
+<blockquote>
+<details>
+<summary>
+<p>Struktur</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb50"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> README.md</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> defaults</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> files</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> handlers</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> meta</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── main.yml</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tasks</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── main.yml</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── users.yml</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> templates</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> tests</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── inventory</span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── test.yml</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> vars</span>
+<span id="cb50-19"><a href="#cb50-19" aria-hidden="true" tabindex="-1"></a>    <span class="ex">└──</span> main.yml</span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>task/users.yml</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb51"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create/Add Users</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.user</span><span class="kw">:</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.name }}&quot;</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.comment }}&quot;</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.uid }}&quot;</span></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.password | password_hash(&#39;sha512&#39;) }}&quot;</span></span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">update_password</span><span class="kw">:</span><span class="at"> on_create </span></span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">loop</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ users }}&quot;</span><span class="at">        </span></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Max</span></span>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;mkdir /var/www/htmldir_max&#39;</span></span>
+<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/dir_max&#39;</span></span>
+<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create sub dir for Erica</span></span>
+<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;mkdir /var/www/html/dir_erica&#39;</span></span>
+<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">creates</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/dir_erica&#39;</span></span>
+<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow access to dir_max </span></span>
+<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb51-23"><a href="#cb51-23" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R maxm:maxm /var/www/html/dir_max&#39;</span></span>
+<span id="cb51-24"><a href="#cb51-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-25"><a href="#cb51-25" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Allow access to dir_erica </span></span>
+<span id="cb51-26"><a href="#cb51-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.command</span><span class="kw">:</span></span>
+<span id="cb51-27"><a href="#cb51-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">cmd</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;chown -R ericam:ericam /var/www/html/dir_erica&#39;</span></span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>task/main.yml</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb52"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co"># tasks file for user</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Include user logik</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.include_tasks</span><span class="kw">:</span><span class="at"> users.yml </span></span></code></pre></div>
+</blockquote>
+</details>
+<details>
+<summary>
+<p>defaults</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb53"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># defaults file for user</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">users</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> maxm</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Max Mustermann</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1010</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ericam</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Erica Musterfrau</span></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">uid</span><span class="kw">:</span><span class="at"> </span><span class="dv">1011</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> secure  </span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Füge die Rollen in das <code>apache</code> Playbook ein.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb54"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Apache Playbook</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">become</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">roles</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> webserver</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> user</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<hr />
+<h2 id="lab-26-rollen-verbinden"><strong>Lab 26: Rollen
+verbinden</strong></h2>
+<ul>
+<li><p>Erstelle eine Rollenabhängigkeit für die <code>webserver</code>
+Rolle. Diese soll von der Rolle <code>user</code> abhängen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb55"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># webserver/meta/main.yml</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dependencies</span><span class="kw">:</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> user</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<hr />
+<h2 id="lab-27-collection-installieren"><strong>Lab 27: Collection
+installieren</strong></h2>
+<ul>
+<li><p>Installiere die <code>community.crypto</code> Collection.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb56"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ansible-galaxy</span> collection install community.crypto</span></code></pre></div></li>
+</ul>
+<p></b></p>
+</blockquote>
+</details>
+<ul>
+<li>Erstelle ein Playbook namens <code>collection.yml</code></li>
+<li>Erzeuge ein Schlüsselpaar auf Basis von <code>ecdsa</code>
+<ul>
+<li>Verwende dafür das Modul <code>openssh_keypair</code></li>
+</ul></li>
+<li>Gib den Pfad <code>~/.ssh/id_ecdsa</code> an</li>
+<li>Delegiere es auf <code>localhost</code> mittels
+<em>delegate_to</em></li>
+<li>Kopieren den öffentliche-Schlüssel auf die Nodes.
+<ul>
+<li><p>Nutze dafür das <code>authorized_key</code> Modul.</p></li>
+<li><p>Verwende den Benutzer <code>user</code>.</p></li>
+<li><p>Nutze den <code>file</code> <em>lookup</em>-Filter um den Inhalt
+der <em>id_ecdsa.pub</em>-Datei zu kopieren.</p>
+<p></b></p></li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb57"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create ssh key</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> all</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Generate ssh-key pair</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">community.crypto.openssh_keypair</span><span class="kw">:</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">path</span><span class="kw">:</span><span class="at"> ~/.ssh/id_ecdsa</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">type</span><span class="kw">:</span><span class="at"> ecdsa</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">delegate_to</span><span class="kw">:</span><span class="at"> localhost </span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy authorized key </span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">ansible.posix.authorized_key</span><span class="kw">:</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">user</span><span class="kw">:</span><span class="at"> user</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present</span></span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">key</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ lookup(&#39;file&#39;, &#39;~/.ssh/id_ecdsa.pub&#39;) }}&quot;</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<hr />
+<h2 id="lab-28-using-tags"><strong>Lab 28: Using Tags</strong></h2>
+<ul>
+<li>Erweitere die <em>webserver</em> Rolle</li>
+<li>Füge <code>tags</code> ein, um die einzelnen Schritte näher zu
+spezifizieren.</li>
+<li>Verwende folgende <code>tags</code>:
+<ul>
+<li><em>install</em>: Paket-Installation</li>
+<li><em>configure</em>: Service- und Startseiten-Konfiguration</li>
+<li><em>security</em>: Server Header-Härtung</li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb58"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># task/main.yml</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Install apache</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.package</span><span class="kw">:</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> httpd</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="kw">-</span><span class="at"> mod_security</span></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> present</span></span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tags</span><span class="kw">:</span></span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> install</span></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Add Facts to index.html</span></span>
+<span id="cb58-13"><a href="#cb58-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.lineinfile</span><span class="kw">:</span></span>
+<span id="cb58-14"><a href="#cb58-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">path</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb58-15"><a href="#cb58-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">line</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;{{ web_content }}&#39;</span></span>
+<span id="cb58-16"><a href="#cb58-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> configure</span></span>
+<span id="cb58-17"><a href="#cb58-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-18"><a href="#cb58-18" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Copy page file </span></span>
+<span id="cb58-19"><a href="#cb58-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.copy</span><span class="kw">:</span></span>
+<span id="cb58-20"><a href="#cb58-20" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">content</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ lookup(&#39;file&#39;, &#39;files/page.html&#39;) }}&quot;</span></span>
+<span id="cb58-21"><a href="#cb58-21" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;/var/www/html/index.html&#39;</span></span>
+<span id="cb58-22"><a href="#cb58-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> configure</span></span>
+<span id="cb58-23"><a href="#cb58-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-24"><a href="#cb58-24" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Template config serversignature</span></span>
+<span id="cb58-25"><a href="#cb58-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.template</span><span class="kw">:</span></span>
+<span id="cb58-26"><a href="#cb58-26" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">src</span><span class="kw">:</span><span class="at"> templates/serversignature.conf.j2</span></span>
+<span id="cb58-27"><a href="#cb58-27" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">dest</span><span class="kw">:</span><span class="at"> /etc/httpd/conf.d/serversignature.conf</span></span>
+<span id="cb58-28"><a href="#cb58-28" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">owner</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb58-29"><a href="#cb58-29" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">group</span><span class="kw">:</span><span class="at"> root</span></span>
+<span id="cb58-30"><a href="#cb58-30" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mode</span><span class="kw">:</span><span class="at"> </span><span class="st">&#39;0644&#39;</span></span>
+<span id="cb58-31"><a href="#cb58-31" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">notify</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb58-32"><a href="#cb58-32" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> security</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># handlers file for webserver</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Restart httpd</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ansible.builtin.service</span><span class="kw">:</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">name</span><span class="kw">:</span><span class="at"> httpd</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">state</span><span class="kw">:</span><span class="at"> restarted</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tags</span><span class="kw">:</span><span class="at"> configure</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<hr />
+<h2 id="lab-29-vault"><strong>Lab 29: Vault</strong></h2>
+<ul>
+<li><p>Erstelle eine neue <em>yaml</em>-Datei namens
+<code>new_users.yml</code>. Diese Datei soll Variablen definitionen
+enthalten um zwei neue Benutzer zu erstellen (vgl. <a
+href="#lab-21-user-mit-loop-erstellen">Lab 21</a>).</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb60"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">users</span><span class="kw">:</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ppinkepank</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Paula Pinkepank</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> test123     </span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> sgiertz</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Simone Giertz</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> test321</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Verschlüssele anschließend die Datei mit
+<code>ansible vault</code>.</p>
+<blockquote>
+<p><strong>WICHTIG</strong></p>
+<p>Merk dir das Passwort!!!</p>
+</blockquote>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb61"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Erstellen der vault</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ansible-vault encrypt new_users.yml</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="ex">New</span> Vault password:</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Confirm</span> New Vault password: </span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Encryption</span> successful</span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li>Erstelle ein neues Playbook namens <code>create_users.yml</code>
+<ul>
+<li><p>Das Playbook soll die Benutzer anlegen die in der
+<code>new_users.yml</code> definiert sind.</p></li>
+<li><p>Binde die <code>new_users.yml</code>-Datei in das Playbook
+ein.</p>
+<p></b></p></li>
+</ul>
+<details>
+<summary>
+Lösung
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb62"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create users</span></span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hosts</span><span class="kw">:</span><span class="at"> test</span></span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">tasks</span><span class="kw">:</span></span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Load vars file</span></span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">include_vars</span><span class="kw">:</span><span class="at"> new_users.yml</span></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> Create users with encrypted vars file</span></span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">user</span><span class="kw">:</span></span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">name</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.name }}&quot;</span></span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.comment }}&quot;</span></span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">password</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ item.password | password_hash(&#39;sha512&#39;) }}&quot;</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">update_password</span><span class="kw">:</span><span class="at"> on_create</span></span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">no_log</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">loop</span><span class="kw">:</span><span class="at"> </span><span class="st">&quot;{{ users }}&quot;</span></span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">become</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Versuche den Inhalt der verschlüsselten <em>new_users</em>-Datei
+mittels <code>cat</code> Befehl auszugeben und schau dir die Ausgabe
+an.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb63"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> cat new_users.yml </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="va">$ANSIBLE_VAULT</span><span class="kw">;</span><span class="ex">1.1</span><span class="kw">;</span><span class="ex">AES256</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="ex">38386336343935393533613239656262366331643531303839356131333434366362623334353032</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="ex">6634353165636165613733313232393461333965393663320a323238316432666634343539303965</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="ex">63343865626136356464376462323931373463653337623032383837373862643339653130326136</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="ex">3565323937353135640a656334366165653461613732343034643063623632636632613564633234</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="ex">65666565313531666631343031333132383031356538656165336263313162353034366535346666</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="ex">37623231633035393937666131626237623765393064393730653162643539303839653939396637</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="ex">34333434326363343362373039373865396261663634643239633163323734666363306562633861</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a><span class="ex">66366364366438353232303437343933326530363632646536313031386631363438383562326539</span></span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a><span class="ex">36323637636362626131326138303665343839386138623865653133303665373138643436623837</span></span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a><span class="ex">63333561356533383434633739366663306639633766336131336335363934383861633434393766</span></span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a><span class="ex">30393634303431633963393762623636653437393739643532336131313531396462343731646132</span></span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a><span class="ex">37656139396530306563623864623932653933393439353362386130346664663531356462663134</span></span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a><span class="ex">32383564663434656630366262636438356232643534653534396637353637643235643034373031</span></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a><span class="ex">33303639623132356337343264643039613137346665353062646532613732363565643462363561</span></span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a><span class="ex">39306265383863363762616539396432393863326565346335326164666138393932396362623438</span></span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a><span class="ex">39643861626430613362326231663537323639613439316339306366363535616164363666366262</span></span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a><span class="ex">39663836643961313462333138356638623165306236363761633138363032623634323239386565</span></span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a><span class="ex">63383731623161306634646330323233353464613630663364363065303537653030323430393831</span></span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a><span class="ex">65633435313538353662613063663162393862636435333537653930383363656234626261646362</span></span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a><span class="ex">63633366393932363465363030646234303961333034666331336663616639356333663062633166</span></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a><span class="ex">39343235326266326632383233333062383563643633616534363131633730356337363963393631</span></span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a><span class="ex">37393364343134656636653632633130613238653335313437663133623864373735356361636635</span></span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a><span class="ex">35313133353236333039376563653333356563343830356434373233343833333764343631643864</span></span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a><span class="ex">36633835643331396363633634313533396237393866343435666132366364313166373730373065</span></span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a><span class="ex">39343938653539323163356165363965343232323232393464303464313862616637393462646530</span></span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a><span class="ex">31623635616631613338653339663033343931306631623438653930613132326363303064633561</span></span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a><span class="ex">333937646166366537313637663066323661</span></span></code></pre></div>
+<p>Da, die Datei verschlüsselt wurde können wir den Inhalt nicht mehr
+sehen.</p>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Verwende das <code>ansible-vault view</code> Befehl, um den
+Inhalt wieder sichtbar zu machen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb64"><pre
+class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="at">$ ansible-vault view new_users.yml</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">Vault password</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">users</span><span class="kw">:</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> ppinkepank</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Paula Pinkepank</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> test123     </span></span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> sgiertz</span></span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">comment</span><span class="kw">:</span><span class="at"> Simone Giertz</span></span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">password</span><span class="kw">:</span><span class="at"> test321</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Versuche das Playbook nun mit der verschlüsselten
+<em>vars</em>-Datei auszuführen.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb65"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ansible-playbook create_users.yml</span></code></pre></div>
+<blockquote>
+<p><strong>Anmerkung</strong></p>
+<p>Wenn du es auf diese Weise versucht hast, wird das nicht
+funktionieren, da wir das Passwort nicht mitgegeben haben kann das
+Playbook die verschlüsselte Datei nicht entschlüsseln.</p>
+</blockquote>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Falls beim Versuch das Playbook auszuführen ein Problem
+aufgetaucht ist, verwende zusätzlich die Option
+<code>--ask-vault-pass</code>.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb66"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ansible-playbook create_users.yml <span class="at">--ask-vault-pass</span></span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
+<p></b></p>
+<ul>
+<li><p>Wenn du die Datei wieder entschlüsseln möchtest, verwende den
+Befehl <code>ansible-vault decrypt</code>.</p>
+<details>
+<summary>
+<p>Lösung</p>
+</summary>
+<blockquote>
+<div class="sourceCode" id="cb67"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ansible-vault decrypt new_users.yml</span></code></pre></div>
+</blockquote>
+</details></li>
+</ul>
