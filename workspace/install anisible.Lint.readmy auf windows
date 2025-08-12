@@ -1,0 +1,51 @@
+Windows (native) – schnell eingerichtet
+Python vorhanden?
+
+powershell
+Kopieren
+Bearbeiten
+py --version
+Falls nicht:
+
+powershell
+Kopieren
+Bearbeiten
+winget install -e --id Python.Python.3.12
+pipx installieren (empfohlen)
+
+powershell
+Kopieren
+Bearbeiten
+py -m pip install --user pipx
+py -m pipx ensurepath
+# Terminal neu öffnen
+ansible-lint installieren
+
+powershell
+Kopieren
+Bearbeiten
+pipx install ansible-lint
+ansible-lint --version
+where ansible-lint   # Pfad merken, z. B. C:\Users\<du>\.local\bin\ansible-lint.exe
+(Alternativ ohne pipx: py -m pip install --user ansible-lint
+Pfad dann oft: C:\Users\<du>\AppData\Roaming\Python\Python312\Scripts\ansible-lint.exe)
+
+VS Code einstellen
+
+Einstellungen öffnen → Suche: “ansible lint”.
+– Ansible › Validation: Lint: Enabled → an
+– Ansible › Validation: Lint: Path → auf den Pfad aus where ansible-lint setzen.
+
+Oder direkt in settings.json:
+
+json
+Kopieren
+Bearbeiten
+{
+  "ansible.validation.lint.enabled": true,
+  "ansible.validation.lint.path": "C:\\Users\\<du>\\.local\\bin\\ansible-lint.exe",
+  "ansible.executionEnvironment.enabled": false
+}
+Wichtig: Wenn du das Projekt in WSL oder per Remote-SSH geöffnet hast, muss ansible-lint in dieser Umgebung installiert sein (nicht unter Windows). In dem Fall einfach dort pipx install ansible-lint ausführen und in VS Code keine Windows-Pfade eintragen.
+
+Kurzcheck: Danach verschwindet die Meldung „ansible-lint is not available“ und du bekommst wieder Linting/Fehlermarker in deinen Playbooks.

@@ -1,0 +1,68 @@
+- name: Install and start webserver
+  hosts: test
+  become: true
+  tasks:
+    - name: Install-httpd
+      ansible.builtin.package:
+        name: httpd          # Debian/Ubuntu: apache2
+        state: latest
+
+    - name: Ensure httpd is running and enabled
+      ansible.builtin.service:
+          name: httpd          # Debian/Ubuntu: apache2
+          state: started
+          enabled: true
+
+    - name: Wait for HTTP port
+      ansible.builtin.wait_for:
+        port: 80
+        state: started
+        timeout: 10
+
+    - name: Ensure httpd is running and enabled
+      ansible.builtin.service:
+        name: httpd          # Debian/Ubuntu: apache2
+        state: started
+        enabled: true
+
+# additional user LAB 7 verbesserung
+    - name: Ensure lab users exist
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}"
+        uid: "{{ item.uid }}"
+        create_home: true
+        shell: /bin/bash
+        state: present
+      loop:
+        - { name: maxm,   comment: "Max Mustermann",   uid: 1010 }
+        - { name: ericam, comment: "Erica Mustermann", uid: 1020 }
+
+
+# LAB 8
+    - name: Copy file to var/www/html
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+
+# Lab 9 
+# retry 8 and change check status
+
+
+
+# Lab 10
+    - name: Create sub dir for Max
+      ansible.builtin.shell:
+        cmd: mkdir /var/www/html/dir_max
+        creates: /var/www/html/dir_max
+
+    - name: Create sub dir for Erica
+      ansible.builtin.shell:
+        cmd: mkdir /var/www/html/dir_erica
+        creates: /var/www/html/dir_erica
+
+    - name: Allow access to maxm folder to user Max
+      ansible.builtin.shell: 'chown -R maxm /var/www/html/dir_max'
+
+    - name: Allow access to ericam folder to user Erica
+      ansible.builtin.shell: 'chown -R ericam /var/www/html/dir_erica'
