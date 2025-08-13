@@ -1,0 +1,15 @@
+---
+webserver_path: "/var/www/html"
+
+string_variable: "Ansible Fast-Track Schulung"
+int_variable: 16
+float_variable: 1.5
+list_variable:                 # Liste (Array)
+  - Stanki
+  - Niko
+dictionary_variable:           # assoziative Liste/ list(dict)
+  - skill: Linux
+    level: 9001
+  - skill: Unix
+    level: 1970
+#my_key: SVA

@@ -1,0 +1,27 @@
+- name: Play with variables
+  hosts: test
+  vars_files:
+    - my_vars.yml
+
+  vars_prompt:
+    - name: my_key # keine Grosschreibung, variablen case sensitive
+      prompt: "Enter access Key"
+      private: false
+
+  tasks:
+    - name: Print Dictionary
+      ansible.builtin.debug:
+        msg:
+          - "{{ dictionary_variable[0] }}"
+
+    - name: Print List variable
+      ansible.builtin.debug:
+        msg:
+          - "{{ list_variable[0] }}"
+
+    - name: Print my variables
+      ansible.builtin.debug:
+        msg:
+          - "{{ int_variable }}"
+          - "{{ dictionary_variable }}"
+          - "{{ my_key }}"
