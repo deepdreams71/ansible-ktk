@@ -1,0 +1,92 @@
+---
+- name: Installiere exakt httpd 2.4.62-5.el9 (x86_64)
+  become: true
+  ansible.builtin.dnf:
+    name: "httpd-2.4.62-5.el9.x86_64"   # NEVRA
+    state: present
+    allow_downgrade: true
+
+- name: Ensure httpd is running and enabled
+  ansible.builtin.service:
+    name: httpd          # Debian/Ubuntu: apache2
+    state: started
+    enabled: true
+
+- name: Wait for HTTP port
+  ansible.builtin.wait_for:
+    port: 80
+    state: started
+    timeout: 10
+
+- name: Ensure httpd is running and enabled
+  ansible.builtin.service:
+    name: httpd          # Debian/Ubuntu: apache2
+    state: started
+    enabled: true
+  notify: Restart httpd via handler
+
+- name: Install httpd for RedHat only
+  ansible.builtin.package:
+    name: httpd
+    state: present
+  when: ansible_os_family | lower == "suse"
+
+
+# additional user LAB 7 verbesserung
+- name: Ensure lab users exist
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    uid: "{{ item.uid }}"
+    create_home: true
+    shell: /bin/bash
+    state: present
+  loop:
+    - { name: maxm, comment: "Max Mustermann", uid: 1010 }
+    - { name: ericam, comment: "Erica Mustermann", uid: 1020 }
+
+
+# LAB 8
+- name: Copy file to var/www/html
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: /var/www/html/index.html
+    mode: "0644"
+
+- name: "Add Guten Tag to index.html"
+  ansible.builtin.lineinfile:
+    path: /var/www/html/index.html
+    line: '<b>guten Tag ;-) !!!</b>'
+    regexp: '(?i)\bguten.*$'
+    validate: 'grep "guten Tag ;-) !!!" %s'
+
+
+- name: Add host information to index.html
+  ansible.builtin.lineinfile:
+    path: '/var/www/html/index.html'
+    line: "{{ ansible_fqdn }} {{ ansible_default_ipv4.address }} {{ ansible_distribution }}"
+
+- name: Show content with uri
+  ansible.builtin.uri:
+    url: http://{{ inventory_hostname }}/index.html   # auf dem Zielhost selbst
+    return_content: true
+    status_code: [200]
+  register: page
+  delegate_to: localhost
+
+- name: Inhalt anzeigen
+  ansible.builtin.debug:
+    var: page.content
+
+### präferiert
+
+- name: Show content with command and curl
+  ansible.builtin.command:
+    argv: ["curl", "-fsS", "http:/{{ inventory_hostname }}/index.html"]
+  register: curl_out
+  delegate_to: localhost
+  changed_when: true
+
+- name: Inhalt anzeigen
+  ansible.builtin.debug:
+    var: curl_out.stdout

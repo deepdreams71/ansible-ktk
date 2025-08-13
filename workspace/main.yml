@@ -1,0 +1,21 @@
+---
+- name: Apache Role
+  hosts: test
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Install httpd and mod_security
+      block:
+        - name: Include apache tasks
+          ansible.builtin.include_tasks: webserver.yml
+        - name: Include users playbook
+          ansible.builtin.include_tasks: users.yml
+      notify: Restart httpd
+      when: ansible_os_family == "RedHat"
+
+  handlers:
+    - name: Restart httpd
+      ansible.builtin.service:
+        name: httpd
+        state: restarted   
