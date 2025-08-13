@@ -1,0 +1,6 @@
+
+# secrets
+**/.ssh/**
+*.pem
+*.key
+id_*
