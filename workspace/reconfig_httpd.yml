@@ -1,0 +1,28 @@
+- name: Install and start webserver
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+
+  tasks:
+    - name: Install apache
+      ansible.builtin.package:
+        name: 
+          - httpd
+          - mod_security
+        state: present
+
+    - name: Set server signature
+      ansible.builtin.template:
+        src: templates/serversignature.conf.j2
+        dest: /etc/httpd/conf.d/serversignature.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: Restart httpd
+
+  handlers:
+  - name: Restart httpd
+    ansible.builtin.service:
+      name: httpd
+      state: restarted

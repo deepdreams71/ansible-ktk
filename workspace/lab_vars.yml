@@ -2,7 +2,11 @@
   hosts: test
   vars_files:
     - my_vars.yml
-
+# lab 17
+  vars:
+    mylist: [4, 5, 6]
+    myvar: ipSUM
+# End Lab 17
   vars_prompt:
     - name: my_key # keine Grosschreibung, variablen case sensitive
       prompt: "Enter access Key"
@@ -25,3 +29,13 @@
           - "{{ int_variable }}"
           - "{{ dictionary_variable }}"
           - "{{ my_key }}"
+
+# Lab 17
+    - name: Use mylist with min and lower
+      ansible.builtin.debug:
+        msg: "{{ mylist | min }}"
+
+    - name: Use myvar
+      ansible.builtin.debug:
+        msg: "{{ myvar | lower }}"
+# END Lab 17

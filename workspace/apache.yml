@@ -1,5 +1,5 @@
 - name: Install and start webserver
-  hosts: test
+  hosts: all
   become: true
   gather_facts: true
   vars:
@@ -11,19 +11,37 @@
       - Niko
     dictionary_variable:
       - { skill: Linux, level: 9001 }
-      - { skill: Unix,  level: 1970 }
+      - { skill: Unix, level: 1970 }
 
   tasks:
-    - name: Install-httpd
-      ansible.builtin.package:
-        name: httpd          # Debian/Ubuntu: apache2
-        state: latest
+    - name: Installiere exakt httpd 2.4.62-5.el9 (x86_64)
+      become: true
+      ansible.builtin.dnf:
+        name: "httpd-2.4.62-5.el9.x86_64"   # NEVRA
+        state: present
+        allow_downgrade: true
+
+    - name: Collect package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Show httpd version (if installed)
+      ansible.builtin.debug:
+        msg: "httpd {{ ansible_facts.packages['httpd'][0].version }}-{{ ansible_facts.packages['httpd'][0].release }}
+              {{ ansible_facts.packages['httpd'][0].arch }}"
+      when: "'httpd' in ansible_facts.packages"
+
+    - name: Not installed
+      ansible.builtin.debug:
+        msg: "httpd ist nicht installiert"
+      when: "'httpd' not in ansible_facts.packages"
 
     - name: Install-facter command
-      ansible.builtin.package:
-        name: facter          # Debian/Ubuntu: apache2
-        state: latest
-        
+      ansible.builtin.dnf:
+        name: facter
+        state: present
+        enablerepo: [epel]
+
     - name: Ensure httpd is running and enabled
       ansible.builtin.service:
         name: httpd          # Debian/Ubuntu: apache2
@@ -41,19 +59,26 @@
         name: httpd          # Debian/Ubuntu: apache2
         state: started
         enabled: true
+      notify: Restart httpd via handler
+
+    - name: Install httpd for RedHat only
+      ansible.builtin.package:
+        name: httpd
+        state: present
+      when: ansible_os_family | lower == "suse"
 
     - name: Install EPEL repository on CentOS
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: epel-release
         state: present
       become: true
 
 
     - name: Install tidy html validator
-      ansible.builtin.package:
+      ansible.builtin.dnf:
         name: tidy
-        state: latest
-      become: true        
+        state: present
+        enablerepo: [epel]
 
 # additional user LAB 7 verbesserung
     - name: Ensure lab users exist
@@ -65,7 +90,7 @@
         shell: /bin/bash
         state: present
       loop:
-        - { name: maxm,   comment: "Max Mustermann",   uid: 1010 }
+        - { name: maxm, comment: "Max Mustermann", uid: 1010 }
         - { name: ericam, comment: "Erica Mustermann", uid: 1020 }
 
 
@@ -74,12 +99,10 @@
       ansible.builtin.copy:
         src: files/index.html
         dest: /var/www/html/index.html
+        mode: "0644"
 
-# Lab 9 
+# Lab 9
 # retry 8 and change check status
-
-
-
 # Lab 10
 #    - name: Create sub dir for Max
 #      ansible.builtin.shell:
@@ -103,14 +126,14 @@
 #        cmd: mkdir dir_max
 #        creates: dir_max
 #      args:
-#        chdir: /var/www/html/        #
+#        chdir: /var/www/html/    #
 #
 #    - name: Create sub dir for Erica
 #      ansible.builtin.shell:
 #        cmd: mkdir dir_erica
 #        creates: dir_erica
 #      args:
-#        chdir: /var/www/html/        
+#        chdir: /var/www/html/
 #
 #    - name: Allow access to maxm folder to user Max
 #      ansible.builtin.shell: 'chown -R maxm dir_max'
@@ -120,7 +143,7 @@
 #    - name: Allow access to ericam folder to user Erica
 #      ansible.builtin.shell: 'chown -R ericam dir_erica'
 #      args:
-#        chdir: /var/www/html/      
+#        chdir: /var/www/html/
 
 
 # Lab 10 verbessert
@@ -133,7 +156,7 @@
         group: "{{ item.user }}"
         mode: "0755"
       loop:
-        - { user: maxm,   dir: dir_max }
+        - { user: maxm, dir: dir_max }
         - { user: ericam, dir: dir_erica }
 
 
@@ -155,24 +178,80 @@
 #        #validate: 'grep "Guten Tag" %s'
 #        validate: 'tidy -q -e %s'
 #        # validate wird ausgeführt vor dem eigentlichen ändern
-#      become: true        
+#      become: true
 #
 #    - name: Restart service httpd, in all cases
 #      ansible.builtin.service:
 #        name: httpd
 #        state: restarted
- 
 
  # Lab 12 Variable definition und chech
 
-    - name: print my variables
+    - name: Print my variables
       ansible.builtin.debug:
-        msg: "String: {{ string_variable }} Int: {{ int_variable }} Float: {{ float_variable }} Liste: {{ list_variable }} Dictionary: {{ dictionary_variable }}" 
+        msg: "String: {{ string_variable }} Int: {{ int_variable }} Float: {{ float_variable }}
+             Liste: {{ list_variable }} Dictionary: {{ dictionary_variable }}"
 
 
-# Lab 13   Facts in Lineinfile      
+# Lab 13   Facts in Lineinfile
 
     - name: Add host information to index.html
       ansible.builtin.lineinfile:
         path: '/var/www/html/index.html'
         line: "{{ ansible_fqdn }} {{ ansible_default_ipv4.address }} {{ ansible_distribution }}"
+
+# Lab 16
+#    - name: Copy new content iwth lookup from file
+#      ansible.builtin.copy:
+#        content: "{{ lookup('file', 'files/pages.html') }}"
+#        dest: "/var/www/html/index.html"
+#        mode: "0644"
+
+    - name: Show content with uri
+      ansible.builtin.uri:
+        url: http://{{ inventory_hostname }}/index.html   # auf dem Zielhost selbst
+        return_content: true
+        status_code: [200]
+      register: page
+      delegate_to: localhost
+
+    - name: Inhalt anzeigen
+      ansible.builtin.debug:
+        var: page.content
+
+### präferiert
+
+    - name: Show content with command and curl
+      ansible.builtin.command:
+        argv: ["curl", "-fsS", "http:/{{ inventory_hostname }}/index.html"]
+      register: curl_out
+      delegate_to: localhost
+      changed_when: true
+
+    - name: Inhalt anzeigen
+      ansible.builtin.debug:
+        var: curl_out.stdout
+
+### Lab 18
+
+    - name: Check cat-facts api
+      ansible.builtin.uri:
+        url: https://catfact.ninja/fact
+        return_content: true
+      register: cat_facts
+
+    - name: Print cat_facts
+      ansible.builtin.debug:
+        msg: "{{ cat_facts.json.fact }}"
+
+    - name: Copy register content
+      ansible.builtin.copy:
+        content: "{{ cat_facts.json.fact }}"
+        dest: "/var/www/html/mypage.html"
+        mode: "0644"
+
+  handlers:
+    - name: Restart httpd via handler
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

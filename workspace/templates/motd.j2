@@ -1,0 +1,8 @@
+Welcome to {{ inventory_hostname }}
+
+Running: {{ ansible_distribution }}
+
+Reachable via:
+{% for ip in ansible_all_ipv4_addresses %}
+- {{ ip }}
+{% endfor %}
